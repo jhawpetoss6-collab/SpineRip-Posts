@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <title>SpineRip Posts - Social Trading Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: rgba(255,255,255,0.9);
+            color: #667eea;
+        }
+        
+        .btn-pro {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #333;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        /* QR Auth Section */
+        .auth-section {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin: 20px auto;
+            max-width: 600px;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .qr-code {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            display: inline-block;
+            margin: 20px 0;
+        }
+        
+        .qr-placeholder {
+            width: 250px;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f0f0;
+            border-radius: 10px;
+            color: #333;
+            flex-direction: column;
+        }
+        
+        .qr-placeholder .icon {
+            font-size: 4rem;
+            margin-bottom: 10px;
+        }
+        
+        /* Posts Feed */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .post-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+            transition: all 0.3s;
+        }
+        
+        .post-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,255,255,0.5);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .post-author {
+            flex: 1;
+        }
+        
+        .author-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .post-time {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        
+        .post-content {
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+        
+        .signal-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+        
+        .signal-buy {
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            color: #0a1929;
+        }
+        
+        .signal-sell {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            color: white;
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+        
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Create Post Box */
+        .create-post {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .post-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            font-family: inherit;
+            margin-bottom: 15px;
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .post-input:focus {
+            outline: none;
+            border-color: white;
+            background: white;
+        }
+        
+        .post-tools {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .tool-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        
+        .tool-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            border: 3px solid rgba(255,255,255,0.3);
+        }
+        
+        .pricing-option {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.4);
+            padding: 25px;
+            margin: 15px 0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .pricing-option:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+        
+        .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin: 10px 0;
+        }
+        
+        .user-stats {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+            min-width: 100px;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+        }
+        
+        @media (max-width: 768px) {
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📱 SpineRip Posts</h1>
+        <p>Social Trading Platform - Share Signals & Connect</p>
+        <div style="margin-top: 20px;">
+            <button class="btn btn-primary" onclick="showAuth()" id="authBtn">📱 Sign In with QR</button>
+            <button class="btn btn-pro" onclick="showUpgrade()">💎 Get PRO</button>
+        </div>
+        <div id="userHeader" style="display: none; margin-top: 15px;">
+            <span id="userName" style="font-size: 1.2rem;">👤 Logged In</span>
+            <button class="btn" onclick="logout()" style="background: rgba(255,255,255,0.3); margin-left: 15px;">Logout</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- QR Auth Section -->
+        <div class="auth-section" id="authSection">
+            <h2>🔐 Sign In to Access SpineRip Posts</h2>
+            <p style="margin: 15px 0;">Scan the QR code with your SpineRip Trader mobile app</p>
+            
+            <div class="qr-code">
+                <div class="qr-placeholder">
+                    <div class="icon">📱</div>
+                    <div style="font-weight: bold; font-size: 1.2rem;">QR Code</div>
+                    <div style="font-size: 0.9rem; margin-top: 5px;">Session: <span id="sessionId">ABC123</span></div>
+                </div>
+            </div>
+            
+            <p style="font-size: 0.9rem; margin: 20px 0;">Open SpineRip Trader App → Settings → Scan QR Code</p>
+            
+            <button class="btn btn-primary" onclick="demoLogin()">🧪 Demo Sign In</button>
+            
+            <div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 12px; margin-top: 20px;">
+                <h3 style="margin-bottom: 10px;">📲 Don't have the app?</h3>
+                <p style="font-size: 0.95rem; margin-bottom: 15px;">Download SpineRip Trader to access posts, signals, and automated trading</p>
+                <button class="btn btn-primary" onclick="downloadApp()">Download App</button>
+            </div>
+        </div>
+        
+        <!-- Posts Feed (Hidden until logged in) -->
+        <div id="postsFeed" style="display: none;">
+            <!-- User Stats -->
+            <div class="user-stats">
+                <div class="stat">
+                    <div class="stat-value" id="postCount">0</div>
+                    <div class="stat-label">Posts</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="followerCount">0</div>
+                    <div class="stat-label">Followers</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="signalCount">0</div>
+                    <div class="stat-label">Signals</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="winRate">0%</div>
+                    <div class="stat-label">Win Rate</div>
+                </div>
+            </div>
+            
+            <!-- Create Post -->
+            <div class="create-post">
+                <h3 style="margin-bottom: 15px;">✍️ Create Post</h3>
+                <textarea class="post-input" id="postInput" placeholder="Share your trading insights, signals, or market analysis..."></textarea>
+                <div class="post-tools">
+                    <button class="tool-btn" onclick="addSignal()">📈 Add Signal</button>
+                    <button class="tool-btn" onclick="addChart()">📊 Add Chart</button>
+                    <button class="tool-btn" onclick="addImage()">🖼️ Add Image</button>
+                    <button class="btn btn-primary" onclick="createPost()">Post</button>
+                </div>
+            </div>
+            
+            <!-- Posts Grid -->
+            <div class="posts-grid" id="postsGrid">
+                <!-- Posts will be added here dynamically -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Upgrade Modal -->
+    <div class="modal" id="upgradeModal">
+        <div class="modal-content">
+            <h2>💎 Upgrade to PRO</h2>
+            <p style="margin: 15px 0;">Unlock unlimited posts, signals, and premium features</p>
+            
+            <div class="pricing-option" onclick="selectPlan('monthly')">
+                <h3>Monthly</h3>
+                <div class="price">$19/mo</div>
+                <div style="font-size: 0.95rem; margin-top: 10px;">
+                    ✅ Unlimited Posts<br>
+                    ✅ Trading Signals<br>
+                    ✅ Advanced Analytics<br>
+                    ✅ Priority Support
+                </div>
+            </div>
+            
+            <div class="pricing-option" onclick="selectPlan('lifetime')">
+                <h3>Lifetime Access</h3>
+                <div class="price">$99</div>
+                <div style="font-size: 0.95rem; margin-top: 10px;">
+                    ✅ Everything in Monthly<br>
+                    ✅ Lifetime Updates<br>
+                    ✅ Exclusive Features<br>
+                    💰 Best Value!
+                </div>
+            </div>
+            
+            <button class="btn" onclick="closeUpgrade()" style="margin-top: 20px; background: rgba(255,255,255,0.3);">Maybe Later</button>
+        </div>
+    </div>
+    
+    <script>
+        let isAuthenticated = false;
+        let currentUser = null;
+        let isPro = false;
+        
+        const samplePosts = [
+            {
+                author: "TraderMike",
+                avatar: "TM",
+                time: "2 hours ago",
+                content: "Strong bullish momentum on TSLA. Breaking resistance at $850. Looking for $900 by end of week.",
+                signal: { type: "BUY", symbol: "TSLA" },
+                likes: 45,
+                comments: 12
+            },
+            {
+                author: "CryptoQueen",
+                avatar: "CQ",
+                time: "5 hours ago",
+                content: "BTC consolidating near $65K. Watching for breakout above $67K for continuation to $70K.",
+                signal: { type: "BUY", symbol: "BTC" },
+                likes: 89,
+                comments: 23
+            },
+            {
+                author: "AlgoTrader",
+                avatar: "AT",
+                time: "8 hours ago",
+                content: "Bearish divergence forming on SPY. Consider taking profits and waiting for reentry at lower levels.",
+                signal: { type: "SELL", symbol: "SPY" },
+                likes: 67,
+                comments: 18
+            }
+        ];
+        
+        function generateSessionId() {
+            return Math.random().toString(36).substring(2, 8).toUpperCase();
+        }
+        
+        function showAuth() {
+            document.getElementById('authSection').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('sessionId').textContent = generateSessionId();
+        }
+        
+        function demoLogin() {
+            const email = prompt('Enter your email for demo login:');
+            if (email) {
+                isAuthenticated = true;
+                currentUser = {
+                    name: email.split('@')[0],
+                    email: email,
+                    isPro: localStorage.getItem('spinerip_pro') === 'active'
+                };
+                isPro = currentUser.isPro;
+                
+                localStorage.setItem('spinerip_posts_user', JSON.stringify(currentUser));
+                showPostsFeed();
+                alert('🎉 Signed in successfully!\n\nWelcome to SpineRip Posts!');
+            }
+        }
+        
+        function showPostsFeed() {
+            document.getElementById('authSection').style.display = 'none';
+            document.getElementById('postsFeed').style.display = 'block';
+            document.getElementById('authBtn').style.display = 'none';
+            document.getElementById('userHeader').style.display = 'block';
+            document.getElementById('userName').textContent = '👤 ' + currentUser.name;
+            
+            // Update stats
+            document.getElementById('postCount').textContent = Math.floor(Math.random() * 50 + 10);
+            document.getElementById('followerCount').textContent = Math.floor(Math.random() * 500 + 100);
+            document.getElementById('signalCount').textContent = Math.floor(Math.random() * 100 + 20);
+            document.getElementById('winRate').textContent = (60 + Math.random() * 20).toFixed(1) + '%';
+            
+            loadPosts();
+        }
+        
+        function loadPosts() {
+            const grid = document.getElementById('postsGrid');
+            grid.innerHTML = '';
+            
+            samplePosts.forEach(post => {
+                const card = createPostCard(post);
+                grid.appendChild(card);
+            });
+        }
+        
+        function createPostCard(post) {
+            const card = document.createElement('div');
+            card.className = 'post-card';
+            
+            let signalHTML = '';
+            if (post.signal) {
+                const signalClass = post.signal.type === 'BUY' ? 'signal-buy' : 'signal-sell';
+                signalHTML = `<div class="signal-badge ${signalClass}">${post.signal.type} ${post.signal.symbol}</div>`;
+            }
+            
+            card.innerHTML = `
+                <div class="post-header">
+                    <div class="avatar">${post.avatar}</div>
+                    <div class="post-author">
+                        <div class="author-name">${post.author}</div>
+                        <div class="post-time">${post.time}</div>
+                    </div>
+                </div>
+                <div class="post-content">${post.content}</div>
+                ${signalHTML}
+                <div class="post-actions">
+                    <button class="action-btn" onclick="likePost(this)">
+                        ❤️ <span>${post.likes}</span>
+                    </button>
+                    <button class="action-btn" onclick="commentPost()">
+                        💬 <span>${post.comments}</span>
+                    </button>
+                    <button class="action-btn" onclick="sharePost()">
+                        📤 Share
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        function createPost() {
+            const content = document.getElementById('postInput').value;
+            
+            if (!content.trim()) {
+                alert('⚠️ Please enter some content!');
+                return;
+            }
+            
+            if (!isPro) {
+                if (confirm('🔒 Creating posts requires PRO subscription.\n\nUpgrade now?')) {
+                    showUpgrade();
+                }
+                return;
+            }
+            
+            const newPost = {
+                author: currentUser.name,
+                avatar: currentUser.name.substring(0, 2).toUpperCase(),
+                time: "Just now",
+                content: content,
+                likes: 0,
+                comments: 0
+            };
+            
+            samplePosts.unshift(newPost);
+            loadPosts();
+            document.getElementById('postInput').value = '';
+            alert('✅ Post created!');
+        }
+        
+        function likePost(btn) {
+            const countSpan = btn.querySelector('span');
+            countSpan.textContent = parseInt(countSpan.textContent) + 1;
+            btn.style.color = '#ff4444';
+        }
+        
+        function commentPost() {
+            alert('💬 Comments coming soon!');
+        }
+        
+        function sharePost() {
+            alert('📤 Post shared! (Demo)');
+        }
+        
+        function addSignal() {
+            const symbol = prompt('Enter stock symbol (e.g., AAPL, TSLA):');
+            if (symbol) alert('📈 Signal added! (Demo)');
+        }
+        
+        function addChart() {
+            alert('📊 Chart upload coming soon!');
+        }
+        
+        function addImage() {
+            alert('🖼️ Image upload coming soon!');
+        }
+        
+        function showUpgrade() {
+            document.getElementById('upgradeModal').classList.add('active');
+        }
+        
+        function closeUpgrade() {
+            document.getElementById('upgradeModal').classList.remove('active');
+        }
+        
+        function selectPlan(plan) {
+            const amount = plan === 'monthly' ? 19 : 99;
+            const frequency = plan === 'monthly' ? '/month' : ' one-time';
+            
+            if (confirm(`Upgrade to ${plan === 'monthly' ? 'Monthly' : 'Lifetime'} for $${amount}${frequency}?\n\nPay via Cash App: $JustinHawpetoss7\n\nClick OK to open Cash App`)) {
+                const cashAppUrl = `https://cash.app/$JustinHawpetoss7/${amount}`;
+                window.open(cashAppUrl, '_blank');
+                
+                setTimeout(() => {
+                    if (confirm('Did you complete the payment?\n\nClick OK to activate PRO')) {
+                        const email = prompt('Enter your email for activation:');
+                        if (email) {
+                            localStorage.setItem('spinerip_pro', 'active');
+                            localStorage.setItem('spinerip_plan', plan);
+                            isPro = true;
+                            if (currentUser) currentUser.isPro = true;
+                            closeUpgrade();
+                            alert('🎉 PRO ACTIVATED!\n\n✅ Unlimited Posts\n✅ Trading Signals\n✅ Advanced Analytics\n\nThank you!');
+                        }
+                    }
+                }, 2000);
+            }
+        }
+        
+        function downloadApp() {
+            if (confirm('📲 SpineRip Trader App\n\nOK - View on GitHub\nCancel - Stay here')) {
+                window.open('https://github.com/jhawpetoss6-collab/-Initial-release-SpineRip-AppForge---AI-app-builder-', '_blank');
+            }
+        }
+        
+        function logout() {
+            if (confirm('Logout?')) {
+                isAuthenticated = false;
+                currentUser = null;
+                localStorage.removeItem('spinerip_posts_user');
+                
+                document.getElementById('authSection').style.display = 'block';
+                document.getElementById('postsFeed').style.display = 'none';
+                document.getElementById('authBtn').style.display = 'inline-block';
+                document.getElementById('userHeader').style.display = 'none';
+                
+                alert('👋 Logged out!');
+            }
+        }
+        
+        // Initialize
+        window.onload = function() {
+            const savedUser = localStorage.getItem('spinerip_posts_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                isAuthenticated = true;
+                showPostsFeed();
+            }
+            
+            console.log('📱 SpineRip Posts loaded!');
+            console.log('💰 Payment: $JustinHawpetoss7');
+        };
+    </script>
+</body>
+</html>

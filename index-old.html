@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>SpineRip Posts - Social Trading Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 60px 20px 40px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin: 0 0 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin: 10px 0;
+        }
+        
+        .header .hint {
+            font-size: 1rem;
+            opacity: 0.7;
+            margin-top: 20px;
+        }
+        
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .demo-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px 0;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .demo-card h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        
+        .demo-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .demo-card li {
+            padding: 12px 0;
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .demo-card li:last-child {
+            border-bottom: none;
+        }
+        
+        /* SpineRip Poster Styles */
+        .spinerip-poster {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+        }
+        
+        .poster-toggle-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .poster-toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .poster-panel {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            width: 400px;
+            max-height: 600px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            display: none;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .poster-panel.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .poster-header {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .poster-header h3 {
+            margin: 0;
+            color: white;
+            font-size: 1.3rem;
+        }
+        
+        .close-poster-btn {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .close-poster-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: rotate(90deg);
+        }
+        
+        .poster-content {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .poster-input,
+        .poster-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+        
+        .poster-input:focus,
+        .poster-textarea:focus {
+            outline: none;
+            border-color: white;
+            background: white;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        .poster-textarea {
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        .submit-post-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .submit-post-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+        }
+        
+        .post-result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .post-result.success {
+            background: rgba(0, 255, 0, 0.2);
+            color: white;
+            display: block;
+        }
+        
+        .post-result.error {
+            background: rgba(255, 0, 0, 0.2);
+            color: white;
+            display: block;
+        }
+        
+        .poster-footer {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .poster-footer p {
+            margin: 5px 0;
+            color: white;
+            font-size: 0.85rem;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .poster-panel {
+                width: 90vw;
+                right: 5vw;
+            }
+            
+            .spinerip-poster {
+                right: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .demo-card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Header -->
+    <div class="header">
+        <h1>📱 SpineRip Posts</h1>
+        <p>Social Trading Platform - Share Signals & Connect</p>
+        <div style="margin-top: 20px;">
+            <button class="poster-toggle-btn" onclick="showAuth()" id="authBtn">📱 Sign In with QR Code</button>
+            <button class="poster-toggle-btn" onclick="showUpgrade()" style="background: linear-gradient(135deg, #ffd700, #ffed4e); color: #333;">💎 Get PRO</button>
+        </div>
+        <div id="userHeader" style="display: none; margin-top: 15px;">
+            <span id="userName" style="font-size: 1.2rem;">👤 Logged In</span>
+            <button class="poster-toggle-btn" onclick="logout()" style="margin-left: 15px; background: rgba(255,255,255,0.3);">Logout</button>
+        </div>
+    </div>
+    
+    <div class="content">
+        <div class="demo-card">
+            <h2>🎯 What This Does</h2>
+            <ul>
+                <li>✅ Post launches, features, showcases, and more</li>
+                <li>✅ Choose from 5 categories</li>
+                <li>✅ Auto-formats your post beautifully</li>
+                <li>✅ Copies to clipboard instantly</li>
+                <li>✅ Opens email to send to SpineRip-Posts</li>
+            </ul>
+        </div>
+        
+        <div class="demo-card">
+            <h2>🚀 How To Use</h2>
+            <ul>
+                <li>1. Click "Post to Community" button</li>
+                <li>2. Fill in your post details</li>
+                <li>3. Click "Share to Community"</li>
+                <li>4. Email opens automatically!</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- SpineRip Poster -->
+    <div id="spinerip-poster" class="spinerip-poster">
+        <button id="toggle-poster" class="poster-toggle-btn">
+            📤 Post to Community
+        </button>
+        
+        <div id="poster-panel" class="poster-panel">
+            <div class="poster-header">
+                <h3>🚀 Share to SpineRip-Posts</h3>
+                <button id="close-poster" class="close-poster-btn">&times;</button>
+            </div>
+            
+            <div class="poster-content">
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="post-category" class="poster-input">
+                        <option value="launch">🚀 Launch</option>
+                        <option value="feature">💡 Feature</option>
+                        <option value="showcase">🎨 Showcase</option>
+                        <option value="announcement">📢 Announcement</option>
+                        <option value="community">🤝 Community</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Your Name/Handle</label>
+                    <input type="text" id="post-author" class="poster-input" placeholder="Your name...">
+                </div>
+                
+                <div class="form-group">
+                    <label>Post Title</label>
+                    <input type="text" id="post-title" class="poster-input" placeholder="Give your post a title...">
+                </div>
+                
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="post-description" class="poster-textarea" placeholder="What do you want to share?"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Link (optional)</label>
+                    <input type="url" id="post-link" class="poster-input" placeholder="https://...">
+                </div>
+                
+                <div class="form-group">
+                    <label>Tags (optional)</label>
+                    <input type="text" id="post-tags" class="poster-input" placeholder="#AI #NoCode #App">
+                </div>
+                
+                <button id="submit-post" class="submit-post-btn">
+                    🚀 Share to Community
+                </button>
+                
+                <div id="post-result" class="post-result"></div>
+            </div>
+            
+            <div class="poster-footer">
+                <p>📋 Your post will be copied to clipboard</p>
+                <p>✉️ Email to: justinhawpetoss7@gmail.com</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // SpineRip Poster JavaScript
+        (function() {
+            const toggleBtn = document.getElementById('toggle-poster');
+            const closeBtn = document.getElementById('close-poster');
+            const panel = document.getElementById('poster-panel');
+            const submitBtn = document.getElementById('submit-post');
+            const resultDiv = document.getElementById('post-result');
+            
+            // Toggle panel
+            toggleBtn.addEventListener('click', () => {
+                panel.classList.toggle('active');
+            });
+            
+            closeBtn.addEventListener('click', () => {
+                panel.classList.remove('active');
+            });
+            
+            // Submit post
+            submitBtn.addEventListener('click', () => {
+                const category = document.getElementById('post-category').value;
+                const author = document.getElementById('post-author').value.trim();
+                const title = document.getElementById('post-title').value.trim();
+                const description = document.getElementById('post-description').value.trim();
+                const link = document.getElementById('post-link').value.trim();
+                const tags = document.getElementById('post-tags').value.trim();
+                
+                // Validate
+                if (!author || !title || !description) {
+                    showResult('error', '❌ Please fill in all required fields!');
+                    return;
+                }
+                
+                // Get category icon
+                const categoryIcons = {
+                    'launch': '🚀',
+                    'feature': '💡',
+                    'showcase': '🎨',
+                    'announcement': '📢',
+                    'community': '🤝'
+                };
+                
+                // Create post text
+                const postText = `
+━━━━━━━━━━━━━━━━━━━━━━
+${categoryIcons[category]} ${category.toUpperCase()}
+━━━━━━━━━━━━━━━━━━━━━━
+
+📝 ${title}
+👤 By: ${author}
+
+${description}
+
+${link ? '🔗 ' + link : ''}
+
+${tags}
+
+━━━━━━━━━━━━━━━━━━━━━━
+📤 Posted via SpineRip AppForge
+                `.trim();
+                
+                // Copy to clipboard
+                navigator.clipboard.writeText(postText).then(() => {
+                    // Create email
+                    const subject = encodeURIComponent(`[SpineRip-Posts] ${categoryIcons[category]} ${title}`);
+                    const body = encodeURIComponent(postText);
+                    const mailtoLink = `mailto:justinhawpetoss7@gmail.com?subject=${subject}&body=${body}`;
+                    
+                    // Open email client
+                    window.location.href = mailtoLink;
+                    
+                    // Show success
+                    showResult('success', '✅ Post copied! Opening email...');
+                    
+                    // Clear form
+                    setTimeout(() => {
+                        document.getElementById('post-author').value = '';
+                        document.getElementById('post-title').value = '';
+                        document.getElementById('post-description').value = '';
+                        document.getElementById('post-link').value = '';
+                        document.getElementById('post-tags').value = '';
+                        panel.classList.remove('active');
+                        resultDiv.style.display = 'none';
+                    }, 3000);
+                }).catch(err => {
+                    showResult('error', '❌ Could not copy to clipboard');
+                });
+            });
+            
+            function showResult(type, message) {
+                resultDiv.className = 'post-result ' + type;
+                resultDiv.textContent = message;
+                resultDiv.style.display = 'block';
+            }
+        })();
+    </script>
+</body>
+</html>
