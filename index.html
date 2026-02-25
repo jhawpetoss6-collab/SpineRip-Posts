@@ -841,6 +841,18 @@
                 buyNow: true
             },
             {
+                id: -1,
+                title: "SpineRip AppForge - AI App Builder",
+                category: "services",
+                price: "FREE (Custom Services Available)",
+                description: "Build complete apps with AI! 3,700+ lines of code. Create web apps, games, websites, trading bots with step-by-step AI prompts. Includes OpenClaw, SkyBot, Warp AI integration. Open source!",
+                icon: "🚀",
+                seller: "SpineRip Official",
+                featured: true,
+                buyNow: true,
+                isAppBuilder: true
+            },
+            {
                 id: 1,
                 title: "Professional Trading Bot",
                 category: "trading-tools",
@@ -918,10 +930,15 @@
             
             const featuredBadge = listing.featured ? '<span class="featured-badge">⭐ FEATURED</span>' : '';
             
-            // Special buy button for SpineRip Trader
-            const actionButton = listing.buyNow 
-                ? '<button class="btn btn-pro" onclick="showUpgrade()" style="width: 100%; font-size: 1.1rem; padding: 15px;">💎 BUY NOW - Choose Plan</button>'
-                : `<button class="btn btn-primary" onclick="contactSeller('${listing.seller}', '${listing.title}')">Contact Seller</button>`;
+            // Special buy button for SpineRip products
+            let actionButton;
+            if (listing.isAppBuilder) {
+                actionButton = '<button class="btn btn-pro" onclick="window.open(\'https://github.com/jhawpetoss6-collab/-Initial-release-SpineRip-AppForge---AI-app-builder-\', \'_blank\')" style="width: 100%; font-size: 1.1rem; padding: 15px;">🎉 GET FREE - Open GitHub</button>';
+            } else if (listing.buyNow) {
+                actionButton = '<button class="btn btn-pro" onclick="showUpgrade()" style="width: 100%; font-size: 1.1rem; padding: 15px;">💎 BUY NOW - Choose Plan</button>';
+            } else {
+                actionButton = `<button class="btn btn-primary" onclick="contactSeller('${listing.seller}', '${listing.title}')">Contact Seller</button>`;
+            }
             
             card.innerHTML = `
                 <div class="listing-image">${listing.icon}</div>
