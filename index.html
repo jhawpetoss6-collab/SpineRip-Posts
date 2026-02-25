@@ -436,6 +436,199 @@
             text-transform: uppercase;
         }
         
+        /* SubZero Pay Styles */
+        .subzero-card {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 280px;
+            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,255,136,0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 9999;
+        }
+        
+        .subzero-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,255,136,0.6);
+        }
+        
+        .subzero-card h3 {
+            color: #0a1929;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .subzero-card p {
+            color: rgba(10,25,41,0.8);
+            font-size: 0.9rem;
+        }
+        
+        .subzero-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+        }
+        
+        .subzero-modal.active {
+            display: flex;
+        }
+        
+        .subzero-content {
+            background: linear-gradient(135deg, #0a1929 0%, #1a2332 100%);
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 3px solid #00ff88;
+        }
+        
+        .subzero-header {
+            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+            padding: 25px;
+            border-radius: 17px 17px 0 0;
+            position: relative;
+        }
+        
+        .subzero-header h2 {
+            color: #0a1929;
+            font-size: 2rem;
+            margin: 0;
+        }
+        
+        .subzero-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.2);
+            color: #0a1929;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .subzero-close:hover {
+            background: rgba(0,0,0,0.4);
+        }
+        
+        .subzero-body {
+            padding: 30px;
+        }
+        
+        .payment-mode-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .mode-tab {
+            flex: 1;
+            padding: 15px;
+            background: rgba(0,255,136,0.1);
+            border: 2px solid rgba(0,255,136,0.3);
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .mode-tab.active {
+            background: rgba(0,255,136,0.3);
+            border-color: #00ff88;
+        }
+        
+        .payment-section {
+            display: none;
+        }
+        
+        .payment-section.active {
+            display: block;
+        }
+        
+        .payment-input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(0,255,136,0.1);
+            border: 2px solid rgba(0,255,136,0.3);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .payment-input:focus {
+            outline: none;
+            border-color: #00ff88;
+        }
+        
+        .payment-method-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .payment-method {
+            padding: 15px;
+            background: rgba(0,255,136,0.1);
+            border: 2px solid rgba(0,255,136,0.3);
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .payment-method.selected {
+            background: rgba(0,255,136,0.3);
+            border-color: #00ff88;
+        }
+        
+        .payment-method:hover {
+            background: rgba(0,255,136,0.2);
+        }
+        
+        .fee-breakdown {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        
+        .fee-line {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+        }
+        
+        .qr-display {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .qr-display canvas {
+            max-width: 100%;
+        }
+        
         @media (max-width: 768px) {
             .posts-grid {
                 grid-template-columns: 1fr;
@@ -443,10 +636,128 @@
             .header h1 {
                 font-size: 1.8rem;
             }
+            .subzero-card {
+                width: 200px;
+                top: 10px;
+                left: 10px;
+                padding: 15px;
+            }
+            .payment-method-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- SubZero Pay Floating Card -->
+    <div class="subzero-card" onclick="openSubZeroPay()">
+        <h3>💸 SubZero Pay</h3>
+        <p>Request & Send Payments</p>
+    </div>
+    
+    <!-- SubZero Pay Modal -->
+    <div class="subzero-modal" id="subzeroModal">
+        <div class="subzero-content">
+            <div class="subzero-header">
+                <h2>💸 SubZero Pay</h2>
+                <button class="subzero-close" onclick="closeSubZeroPay()">&times;</button>
+            </div>
+            
+            <div class="subzero-body">
+                <!-- Mode Selection -->
+                <div class="payment-mode-tabs">
+                    <div class="mode-tab active" id="requestTab" onclick="switchMode('request')">
+                        📲 Request Payment
+                    </div>
+                    <div class="mode-tab" id="methodsTab" onclick="switchMode('methods')">
+                        💳 Payment Methods
+                    </div>
+                </div>
+                
+                <!-- Request Payment Section -->
+                <div class="payment-section active" id="requestSection">
+                    <h3 style="margin-bottom: 15px; color: #00ff88;">💵 Request Payment</h3>
+                    
+                    <input type="number" class="payment-input" id="requestAmount" placeholder="Amount ($)" step="0.01">
+                    <input type="text" class="payment-input" id="requestNote" placeholder="Note (optional)">
+                    
+                    <h4 style="margin: 20px 0 10px; color: #00ff88;">Select Payment Method:</h4>
+                    <div class="payment-method-grid" id="paymentMethodGrid">
+                        <div class="payment-method" onclick="selectPaymentMethod('cashapp')">
+                            💵 Cash App<br><small>$JustinHawpetoss7</small>
+                        </div>
+                        <div class="payment-method" onclick="selectPaymentMethod('venmo')">
+                            💳 Venmo<br><small>@user</small>
+                        </div>
+                        <div class="payment-method" onclick="selectPaymentMethod('googlepay')">
+                            📱 Google Pay<br><small>user@gmail.com</small>
+                        </div>
+                        <div class="payment-method" onclick="selectPaymentMethod('crypto')">
+                            ₿ Crypto<br><small>Wallet</small>
+                        </div>
+                    </div>
+                    
+                    <div class="fee-breakdown" id="feeBreakdown" style="display: none;">
+                        <h4 style="color: #00ff88; margin-bottom: 10px;">📊 Fee Breakdown</h4>
+                        <div class="fee-line">
+                            <span>Amount:</span>
+                            <span id="feeAmount">$0.00</span>
+                        </div>
+                        <div class="fee-line">
+                            <span>SubZero Fee (2.9% + $0.30):</span>
+                            <span id="feeCharge">$0.00</span>
+                        </div>
+                        <div class="fee-line" style="font-weight: bold; color: #00ff88; border-top: 1px solid rgba(0,255,136,0.3); padding-top: 10px; margin-top: 10px;">
+                            <span>Total:</span>
+                            <span id="feeTotal">$0.00</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-pro" onclick="generatePaymentQR()" style="width: 100%; margin-top: 20px; padding: 15px; font-size: 1.1rem;">
+                        📦 Generate Payment QR
+                    </button>
+                    
+                    <div id="qrResult" style="display: none;">
+                        <div class="qr-display" id="qrDisplay">
+                            <div style="color: #333; font-weight: bold; margin-bottom: 15px;">📲 Scan to Pay</div>
+                            <canvas id="qrCanvas"></canvas>
+                            <div style="color: #333; margin-top: 15px; font-size: 0.9rem;" id="qrInfo"></div>
+                        </div>
+                        <button class="btn btn-primary" onclick="sharePaymentLink()" style="width: 100%;">
+                            📤 Share Payment Link
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Payment Methods Section -->
+                <div class="payment-section" id="methodsSection">
+                    <h3 style="margin-bottom: 15px; color: #00ff88;">💳 Manage Payment Methods</h3>
+                    
+                    <div id="savedMethodsList">
+                        <div style="background: rgba(0,255,136,0.1); padding: 15px; border-radius: 10px; margin: 10px 0; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                💵 <strong>Cash App</strong><br>
+                                <small>$JustinHawpetoss7</small>
+                                <span style="color: #00ff88; margin-left: 10px;">✓ DEFAULT</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="addPaymentMethod()" style="width: 100%; margin-top: 20px;">
+                        + Add Payment Method
+                    </button>
+                    
+                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(0,255,136,0.3);">
+                        <h4 style="color: #00ff88; margin-bottom: 10px;">📊 Transaction History</h4>
+                        <div id="transactionHistory" style="font-size: 0.9rem; opacity: 0.8;">
+                            No transactions yet
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div class="header">
         <h1>📱 SpineRip Posts</h1>
         <p>Social Trading Platform - Share Signals & Connect</p>
@@ -1023,6 +1334,165 @@
             }
         }
         
+        // SubZero Pay Functions
+        let selectedPaymentMethod = null;
+        let subzeroTransactions = JSON.parse(localStorage.getItem('subzero_transactions') || '[]');
+        
+        function openSubZeroPay() {
+            document.getElementById('subzeroModal').classList.add('active');
+        }
+        
+        function closeSubZeroPay() {
+            document.getElementById('subzeroModal').classList.remove('active');
+        }
+        
+        function switchMode(mode) {
+            document.getElementById('requestTab').classList.remove('active');
+            document.getElementById('methodsTab').classList.remove('active');
+            document.getElementById('requestSection').classList.remove('active');
+            document.getElementById('methodsSection').classList.remove('active');
+            
+            if (mode === 'request') {
+                document.getElementById('requestTab').classList.add('active');
+                document.getElementById('requestSection').classList.add('active');
+            } else {
+                document.getElementById('methodsTab').classList.add('active');
+                document.getElementById('methodsSection').classList.add('active');
+            }
+        }
+        
+        function selectPaymentMethod(method) {
+            // Remove selected class from all
+            document.querySelectorAll('.payment-method').forEach(el => el.classList.remove('selected'));
+            // Add to clicked
+            event.target.closest('.payment-method').classList.add('selected');
+            selectedPaymentMethod = method;
+            
+            // Calculate fees if amount entered
+            const amount = parseFloat(document.getElementById('requestAmount').value);
+            if (amount > 0) {
+                calculateFees(amount);
+            }
+        }
+        
+        function calculateFees(amount) {
+            const fee = (amount * 0.029) + 0.30;
+            const total = amount + fee;
+            
+            document.getElementById('feeAmount').textContent = '$' + amount.toFixed(2);
+            document.getElementById('feeCharge').textContent = '$' + fee.toFixed(2);
+            document.getElementById('feeTotal').textContent = '$' + total.toFixed(2);
+            document.getElementById('feeBreakdown').style.display = 'block';
+        }
+        
+        function generatePaymentQR() {
+            const amount = parseFloat(document.getElementById('requestAmount').value);
+            const note = document.getElementById('requestNote').value;
+            
+            if (!amount || amount <= 0) {
+                alert('⚠️ Please enter a valid amount!');
+                return;
+            }
+            
+            if (!selectedPaymentMethod) {
+                alert('⚠️ Please select a payment method!');
+                return;
+            }
+            
+            calculateFees(amount);
+            
+            // Generate payment URL based on method
+            let paymentUrl = '';
+            switch(selectedPaymentMethod) {
+                case 'cashapp':
+                    paymentUrl = `https://cash.app/$JustinHawpetoss7/${amount.toFixed(2)}`;
+                    break;
+                case 'venmo':
+                    paymentUrl = `https://venmo.com/u/username?amount=${amount.toFixed(2)}&note=${encodeURIComponent(note)}`;
+                    break;
+                case 'googlepay':
+                    paymentUrl = `upi://pay?pa=user@gmail.com&amount=${amount.toFixed(2)}&tn=${encodeURIComponent(note)}`;
+                    break;
+                case 'crypto':
+                    paymentUrl = `bitcoin:wallet?amount=${amount}&message=${encodeURIComponent(note)}`;
+                    break;
+            }
+            
+            // Show QR code (using text for demo - in production use QR library)
+            document.getElementById('qrInfo').textContent = `Amount: $${amount}${note ? ' - ' + note : ''}`;
+            document.getElementById('qrResult').style.display = 'block';
+            
+            // Generate simple QR placeholder
+            const canvas = document.getElementById('qrCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 200;
+            canvas.height = 200;
+            ctx.fillStyle = '#00ff88';
+            ctx.fillRect(0, 0, 200, 200);
+            ctx.fillStyle = '#0a1929';
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('QR CODE', 100, 90);
+            ctx.fillText(`$${amount}`, 100, 110);
+            
+            // Save transaction
+            const transaction = {
+                amount: amount,
+                fee: (amount * 0.029) + 0.30,
+                method: selectedPaymentMethod,
+                note: note,
+                date: new Date().toISOString()
+            };
+            subzeroTransactions.unshift(transaction);
+            if (subzeroTransactions.length > 50) subzeroTransactions.pop();
+            localStorage.setItem('subzero_transactions', JSON.stringify(subzeroTransactions));
+            
+            alert('✅ Payment QR Generated!\n\nShare with your customer.');
+        }
+        
+        function sharePaymentLink() {
+            const amount = document.getElementById('requestAmount').value;
+            const note = document.getElementById('requestNote').value;
+            let paymentUrl = '';
+            
+            switch(selectedPaymentMethod) {
+                case 'cashapp':
+                    paymentUrl = `https://cash.app/$JustinHawpetoss7/${amount}`;
+                    break;
+                default:
+                    paymentUrl = 'Payment link';
+            }
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'SubZero Pay Request',
+                    text: `Pay $${amount}${note ? ' - ' + note : ''}`,
+                    url: paymentUrl
+                }).then(() => {
+                    alert('📤 Payment link shared!');
+                }).catch(() => {
+                    // Fallback
+                    copyToClipboard(paymentUrl);
+                });
+            } else {
+                copyToClipboard(paymentUrl);
+            }
+        }
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('📋 Payment link copied to clipboard!');
+            });
+        }
+        
+        function addPaymentMethod() {
+            const method = prompt('Add Payment Method:\n\n1. Cash App\n2. Venmo\n3. Google Pay\n4. Mercado Pago\n\nEnter number (1-4):');
+            
+            if (method) {
+                alert('✅ Payment method added!\n\n(Feature coming soon)');
+            }
+        }
+        
         // Initialize
         window.onload = function() {
             const savedUser = localStorage.getItem('spinerip_posts_user');
@@ -1034,6 +1504,7 @@
             
             console.log('📱 SpineRip Posts loaded!');
             console.log('💰 Payment: $JustinHawpetoss7');
+            console.log('💸 SubZero Pay Ready!');
         };
     </script>
 </body>
