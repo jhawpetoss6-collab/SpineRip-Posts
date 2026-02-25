@@ -59,6 +59,115 @@
             padding: 30px 20px;
         }
         
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .tab-btn {
+            padding: 15px 40px;
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 15px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: rgba(255,255,255,0.9);
+            color: #667eea;
+            border-color: white;
+        }
+        
+        .tab-btn:hover {
+            background: rgba(255,255,255,0.25);
+        }
+        
+        /* Marketplace Styles */
+        .marketplace-section {
+            display: none;
+        }
+        
+        .marketplace-section.active {
+            display: block;
+        }
+        
+        .listing-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.2);
+            transition: all 0.3s;
+        }
+        
+        .listing-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,255,255,0.5);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        
+        .listing-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        .listing-content {
+            padding: 20px;
+        }
+        
+        .listing-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .listing-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin: 10px 0;
+        }
+        
+        .listing-description {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+        
+        .listing-category {
+            display: inline-block;
+            padding: 5px 15px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 10px 0;
+        }
+        
+        .featured-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #333;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
         /* QR Auth Section */
         .auth-section {
             background: rgba(255,255,255,0.15);
@@ -378,6 +487,12 @@
         
         <!-- Posts Feed (Hidden until logged in) -->
         <div id="postsFeed" style="display: none;">
+            <!-- Navigation Tabs -->
+            <div class="nav-tabs">
+                <button class="tab-btn active" onclick="showTab('posts')" id="postsTab">📱 Posts</button>
+                <button class="tab-btn" onclick="showTab('marketplace')" id="marketplaceTab">🛒 Marketplace</button>
+            </div>
+            
             <!-- User Stats -->
             <div class="user-stats">
                 <div class="stat">
@@ -398,21 +513,51 @@
                 </div>
             </div>
             
-            <!-- Create Post -->
-            <div class="create-post">
-                <h3 style="margin-bottom: 15px;">✍️ Create Post</h3>
-                <textarea class="post-input" id="postInput" placeholder="Share your trading insights, signals, or market analysis..."></textarea>
-                <div class="post-tools">
-                    <button class="tool-btn" onclick="addSignal()">📈 Add Signal</button>
-                    <button class="tool-btn" onclick="addChart()">📊 Add Chart</button>
-                    <button class="tool-btn" onclick="addImage()">🖼️ Add Image</button>
-                    <button class="btn btn-primary" onclick="createPost()">Post</button>
+            <!-- Posts Section -->
+            <div id="postsSection" class="active">
+                <!-- Create Post -->
+                <div class="create-post">
+                    <h3 style="margin-bottom: 15px;">✍️ Create Post</h3>
+                    <textarea class="post-input" id="postInput" placeholder="Share your trading insights, signals, or market analysis..."></textarea>
+                    <div class="post-tools">
+                        <button class="tool-btn" onclick="addSignal()">📈 Add Signal</button>
+                        <button class="tool-btn" onclick="addChart()">📊 Add Chart</button>
+                        <button class="tool-btn" onclick="addImage()">🖼️ Add Image</button>
+                        <button class="btn btn-primary" onclick="createPost()">Post</button>
+                    </div>
+                </div>
+                
+                <!-- Posts Grid -->
+                <div class="posts-grid" id="postsGrid">
+                    <!-- Posts will be added here dynamically -->
                 </div>
             </div>
             
-            <!-- Posts Grid -->
-            <div class="posts-grid" id="postsGrid">
-                <!-- Posts will be added here dynamically -->
+            <!-- Marketplace Section -->
+            <div id="marketplaceSection" class="marketplace-section">
+                <!-- Create Listing -->
+                <div class="create-post">
+                    <h3 style="margin-bottom: 15px;">🛒 Create Listing</h3>
+                    <input type="text" class="post-input" id="listingTitle" placeholder="Item title..." style="min-height: auto; margin-bottom: 10px;">
+                    <select class="post-input" id="listingCategory" style="min-height: auto; margin-bottom: 10px;">
+                        <option value="trading-tools">📊 Trading Tools</option>
+                        <option value="services">🛠️ Services</option>
+                        <option value="hardware">💻 Hardware</option>
+                        <option value="courses">🎓 Courses</option>
+                        <option value="other">📦 Other</option>
+                    </select>
+                    <input type="text" class="post-input" id="listingPrice" placeholder="Price (e.g., $50)..." style="min-height: auto; margin-bottom: 10px;">
+                    <textarea class="post-input" id="listingDescription" placeholder="Describe your item..."></textarea>
+                    <div class="post-tools">
+                        <button class="tool-btn" onclick="featuredListing()">⭐ Featured ($5)</button>
+                        <button class="btn btn-primary" onclick="createListing()">Post Listing</button>
+                    </div>
+                </div>
+                
+                <!-- Marketplace Grid -->
+                <div class="posts-grid" id="marketplaceGrid">
+                    <!-- Listings will be added here dynamically -->
+                </div>
             </div>
         </div>
     </div>
@@ -679,6 +824,169 @@
                 document.getElementById('userHeader').style.display = 'none';
                 
                 alert('👋 Logged out!');
+            }
+        }
+        
+        // Marketplace Functions
+        const sampleListings = [
+            {
+                id: 1,
+                title: "Professional Trading Bot",
+                category: "trading-tools",
+                price: "$299",
+                description: "Automated trading bot with 15+ indicators. Backtested over 3 years. Includes lifetime support.",
+                icon: "🤖",
+                seller: "BotMaster",
+                featured: true
+            },
+            {
+                id: 2,
+                title: "Day Trading Course",
+                category: "courses",
+                price: "$497",
+                description: "Complete day trading mastery course. 50+ hours of video content. Learn from a 7-figure trader.",
+                icon: "🎓",
+                seller: "TradeGuru",
+                featured: false
+            },
+            {
+                id: 3,
+                title: "Trading PC Setup - RTX 4090",
+                category: "hardware",
+                price: "$2,499",
+                description: "Custom built trading workstation. 6 monitor support. Perfect for day trading.",
+                icon: "💻",
+                seller: "TechTrader",
+                featured: false
+            },
+            {
+                id: 4,
+                title: "1-on-1 Trading Consultation",
+                category: "services",
+                price: "$150/hr",
+                description: "Personal trading consultation. Strategy review, risk management, and live trading sessions.",
+                icon: "💼",
+                seller: "ProCoach",
+                featured: true
+            }
+        ];
+        
+        function showTab(tab) {
+            // Update tab buttons
+            document.getElementById('postsTab').classList.remove('active');
+            document.getElementById('marketplaceTab').classList.remove('active');
+            
+            if (tab === 'posts') {
+                document.getElementById('postsTab').classList.add('active');
+                document.getElementById('postsSection').style.display = 'block';
+                document.getElementById('marketplaceSection').classList.remove('active');
+            } else {
+                document.getElementById('marketplaceTab').classList.add('active');
+                document.getElementById('postsSection').style.display = 'none';
+                document.getElementById('marketplaceSection').classList.add('active');
+                loadMarketplace();
+            }
+        }
+        
+        function loadMarketplace() {
+            const grid = document.getElementById('marketplaceGrid');
+            grid.innerHTML = '';
+            
+            // Sort featured first
+            const sortedListings = [...sampleListings].sort((a, b) => b.featured - a.featured);
+            
+            sortedListings.forEach(listing => {
+                const card = createListingCard(listing);
+                grid.appendChild(card);
+            });
+        }
+        
+        function createListingCard(listing) {
+            const card = document.createElement('div');
+            card.className = 'listing-card';
+            
+            const featuredBadge = listing.featured ? '<span class="featured-badge">⭐ FEATURED</span>' : '';
+            
+            card.innerHTML = `
+                <div class="listing-image">${listing.icon}</div>
+                <div class="listing-content">
+                    <div class="listing-title">${listing.title}${featuredBadge}</div>
+                    <div class="listing-category">${getCategoryLabel(listing.category)}</div>
+                    <div class="listing-price">${listing.price}</div>
+                    <div class="listing-description">${listing.description}</div>
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-primary" onclick="contactSeller('${listing.seller}', '${listing.title}')">Contact Seller</button>
+                    </div>
+                    <div style="font-size: 0.85rem; opacity: 0.7; margin-top: 10px;">
+                        Seller: ${listing.seller}
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        function getCategoryLabel(category) {
+            const labels = {
+                'trading-tools': '📊 Trading Tools',
+                'services': '🛠️ Services',
+                'hardware': '💻 Hardware',
+                'courses': '🎓 Courses',
+                'other': '📦 Other'
+            };
+            return labels[category] || category;
+        }
+        
+        function createListing() {
+            const title = document.getElementById('listingTitle').value;
+            const category = document.getElementById('listingCategory').value;
+            const price = document.getElementById('listingPrice').value;
+            const description = document.getElementById('listingDescription').value;
+            
+            if (!title || !price || !description) {
+                alert('⚠️ Please fill in all fields!');
+                return;
+            }
+            
+            const newListing = {
+                id: Date.now(),
+                title: title,
+                category: category,
+                price: price,
+                description: description,
+                icon: '📦',
+                seller: currentUser.name,
+                featured: false
+            };
+            
+            sampleListings.unshift(newListing);
+            loadMarketplace();
+            
+            // Clear form
+            document.getElementById('listingTitle').value = '';
+            document.getElementById('listingPrice').value = '';
+            document.getElementById('listingDescription').value = '';
+            
+            alert('✅ Listing created!');
+        }
+        
+        function featuredListing() {
+            if (confirm('⭐ Feature your listing for $5?\n\nPay via Cash App: $JustinHawpetoss7\n\nFeatured listings appear at the top!')) {
+                const cashAppUrl = 'https://cash.app/$JustinHawpetoss7/5';
+                window.open(cashAppUrl, '_blank');
+                
+                setTimeout(() => {
+                    if (confirm('Payment sent?\n\nClick OK to feature your listing')) {
+                        alert('🎉 Your next listing will be FEATURED!\n\nThank you!');
+                    }
+                }, 2000);
+            }
+        }
+        
+        function contactSeller(seller, item) {
+            const message = `Hi ${seller}, I'm interested in your listing: ${item}`;
+            if (confirm(`Contact ${seller} about "${item}"?\n\nThis will open your email client.`)) {
+                window.location.href = `mailto:justinhawpetoss7@gmail.com?subject=Marketplace Inquiry: ${encodeURIComponent(item)}&body=${encodeURIComponent(message)}`;
             }
         }
         
