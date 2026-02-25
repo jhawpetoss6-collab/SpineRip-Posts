@@ -830,6 +830,17 @@
         // Marketplace Functions
         const sampleListings = [
             {
+                id: 0,
+                title: "SpineRip Trader PRO - AI Trading Bot",
+                category: "trading-tools",
+                price: "$19/mo or $99 Lifetime",
+                description: "Complete AI-powered day trading platform! QR sign-in, automated trading, 15+ indicators, stop loss/take profit, portfolio tracking. Monthly or lifetime access available.",
+                icon: "📱",
+                seller: "SpineRip Official",
+                featured: true,
+                buyNow: true
+            },
+            {
                 id: 1,
                 title: "Professional Trading Bot",
                 category: "trading-tools",
@@ -907,6 +918,11 @@
             
             const featuredBadge = listing.featured ? '<span class="featured-badge">⭐ FEATURED</span>' : '';
             
+            // Special buy button for SpineRip Trader
+            const actionButton = listing.buyNow 
+                ? '<button class="btn btn-pro" onclick="showUpgrade()" style="width: 100%; font-size: 1.1rem; padding: 15px;">💎 BUY NOW - Choose Plan</button>'
+                : `<button class="btn btn-primary" onclick="contactSeller('${listing.seller}', '${listing.title}')">Contact Seller</button>`;
+            
             card.innerHTML = `
                 <div class="listing-image">${listing.icon}</div>
                 <div class="listing-content">
@@ -915,7 +931,7 @@
                     <div class="listing-price">${listing.price}</div>
                     <div class="listing-description">${listing.description}</div>
                     <div style="margin-top: 15px;">
-                        <button class="btn btn-primary" onclick="contactSeller('${listing.seller}', '${listing.title}')">Contact Seller</button>
+                        ${actionButton}
                     </div>
                     <div style="font-size: 0.85rem; opacity: 0.7; margin-top: 10px;">
                         Seller: ${listing.seller}
